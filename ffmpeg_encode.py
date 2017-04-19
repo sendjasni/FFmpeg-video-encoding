@@ -8,7 +8,7 @@ HEIGHT = 720
 FRAME_RATE = 30
 
 
-def process():
+def get_video_input():
     cwd = os.getcwd()
 
     # get a list of files that have the extension y4m
@@ -17,10 +17,10 @@ def process():
 
     # encode each file
     for file in filelist:
-        encode(file)
+        encode_video(file)
 
 
-def encode(file):
+def encode_video(file):
     name = ''.join(file.split('.')[:-1])
     output = '{}.h265'.format(name)
 
@@ -37,4 +37,5 @@ def encode(file):
 
 
 if __name__ == "__main__":
-    process()
+    get_video_input()
+
