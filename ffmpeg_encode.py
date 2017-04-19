@@ -1,11 +1,10 @@
 import os, subprocess
 
 # path to ffmpeg bin
-FFMPEG_PATH = '/usr/local/bin/ffmpeg'
+FFMPEG_BIN = 'ffmpeg'
 # params for video encoding
-WIDTH = 1080
-HEIGHT = 720
-FRAME_RATE = 30
+WIDTH_X_HEIGHT = '1024x720'
+FRAME_RATE = '30'
 
 
 def get_video_input():
@@ -22,20 +21,35 @@ def get_video_input():
 
 def encode_video(file):
     name = ''.join(file.split('.')[:-1])
-    output = '{}.h265'.format(name)
+    outputName = '{}_encoded.h265'.format(name)
 
-    #try:
-    command = [FFMPEG_PATH, '-i', file, '-s', WIDTH, 'x', HEIGHT, '-r', FRAME_RATE, '-c:v libx265e -c:a copy',
-                   '-threads', '8', output]
-    subprocess.call(command)  # encode the video!
-    # except  subprocess.CalledProcessError as err:
-    #     et =   err.returncode
-    #     if ret in (1, 2):
-    #         print("the command failed")
-    #     elif ret in (3, 4, 5):
-    #         print("the command failed very much")
+    try:
+        encode_command = [FFMPEG_BIN,'-i',file, '-s',WIDTH_X_HEIGHT,'-r', FRAME_RATE,'-c:v','libx265', '-c:a','copy', outputName ]
+        subprocess.call(encode_command)  # encode the video!
+    except  subprocess.CalledProcessError as err:
+        ret =   err.returncode
+        if ret in (1, 2):
+            print("the command failed")
+        elif ret in (3, 4, 5):
+            print("the command failed very much")
+
+    decode_video(outputName)
+
+def decode_video(encoded_file):
+    input_file = ''.join(encoded_file.split('.')[:-1])
+    decoded_file = '{}_decoded.y4m'.format(input_file)
+
+    try:
+        decode_command = [FFMPEG_BIN,'-i' ,encoded_file,'-f','yuv4mpegpipe', decoded_file]
+        subprocess.call(decode_command)  # decode the video!
+
+    except subprocess.CalledProcessError as err:
+        ret =   err.returncode
+        if ret in (1, 2):
+            print("the command failed")
+        elif ret in (3, 4, 5):
+            print("the command failed very much")
 
 
 if __name__ == "__main__":
     get_video_input()
-
