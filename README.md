@@ -2,7 +2,7 @@
 
 
 
-FFmpeg video encoding is simple python script for encoding and decoding video files using  
+Asimple python script for encoding and decoding video files using  
 [FFmpeg](https://ffmpeg.org/) and [H265 Encoder](http://x265.org/)
 
 ## Dependencies
